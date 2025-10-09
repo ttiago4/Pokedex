@@ -1,5 +1,9 @@
 import { rawListeners } from "process";
 import { createInterface } from "readline";
+import { commandExit } from "./command_exit.js";
+import { commandHelp } from "./command_help.js";
+import { getCommands } from "./commands.js";
+import type { CLICommand, State } from "./state.js"
 
 export function cleanInput(input: string): string[] {
   let res: string[] = []
@@ -12,21 +16,18 @@ export function cleanInput(input: string): string[] {
   return res;
 }
 
-export function startREPL() {
-  const repl = createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    prompt: "Pokedex > ",
-  });
-
+export function startREPL(rl: State) {
+  const repl = rl.interface;
   repl.prompt();
-  
-  repl.on("line", (line) => {
+
+  repl.on("line", (line: string) => {
     const clean = cleanInput(line);
     if (!clean) {
       repl.prompt();
+    } else if (clean[0] in getCommands()) {
+        getCommands()[clean[0]].callback(rl);
     } else {
-      console.log(`Your command was: ${clean[0]}`);
+      console.log("Unknown command");
     }
     repl.prompt();
   })

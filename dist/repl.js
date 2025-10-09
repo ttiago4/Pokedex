@@ -1,4 +1,4 @@
-import { createInterface } from "readline";
+import { getCommands } from "./commands.js";
 export function cleanInput(input) {
     let res = [];
     let phrase = input.trim();
@@ -9,20 +9,19 @@ export function cleanInput(input) {
     }
     return res;
 }
-export function startREPL() {
-    const repl = createInterface({
-        input: process.stdin,
-        output: process.stdout,
-        prompt: "Pokedex > ",
-    });
+export function startREPL(rl) {
+    const repl = rl.interface;
     repl.prompt();
     repl.on("line", (line) => {
         const clean = cleanInput(line);
         if (!clean) {
             repl.prompt();
         }
+        else if (clean[0] in getCommands()) {
+            getCommands()[clean[0]].callback(rl);
+        }
         else {
-            console.log(`Your command was: ${clean[0]}`);
+            console.log("Unknown command");
         }
         repl.prompt();
     });
