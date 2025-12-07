@@ -1,21 +1,42 @@
+import { error } from "console";
+
 export class PokeAPI {
   private static readonly baseURL = "https://pokeapi.co/api/v2";
 
   constructor() {}
 
   async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
-    // implement this
+    let url = pageURL ? 
+    pageURL :
+    `${PokeAPI.baseURL}/location-area?limit=20`
+    
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("error fetching");
+    return res.json();
   }
 
   async fetchLocation(locationName: string): Promise<Location> {
-    // implement this
+    const url = `${PokeAPI.baseURL}/location-area/${locationName}/`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("error fetching");
+    return res.json();
   }
 }
 
 export type ShallowLocations = {
-  // add properties here
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: {
+    name: string;
+    url: string;
+  }[];
 };
 
 export type Location = {
-  // add properties here
+  id: number;
+  name: string;
+  game_index: number;
+  pokemon_encounters: any[];
 };

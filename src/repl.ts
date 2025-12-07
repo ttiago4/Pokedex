@@ -12,19 +12,27 @@ export function cleanInput(input: string): string[] {
   return res;
 }
 
-export function startREPL(rl: State) {
+export async function startREPL(rl: State) {
   const repl = rl.interface;
-  repl.prompt();
+    repl.prompt();
 
-  repl.on("line", (line: string) => {
+  repl.on("line", async (line: string) => {
     const clean = cleanInput(line);
+
     if (!clean) {
       repl.prompt();
+
     } else if (clean[0] in getCommands()) {
-        getCommands()[clean[0]].callback(rl);
+
+      try{
+        await getCommands()[clean[0]].callback(rl);
+        } catch (err: any) {
+          throw new Error(err.message)
+      }
+
     } else {
       console.log("Unknown command");
     }
     repl.prompt();
-  })
+  });
 }
