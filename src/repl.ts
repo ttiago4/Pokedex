@@ -1,9 +1,5 @@
-import { rawListeners } from "process";
-import { createInterface } from "readline";
-import { commandExit } from "./command_exit.js";
-import { commandHelp } from "./command_help.js";
 import { getCommands } from "./commands.js";
-import type { CLICommand, State } from "./state.js"
+import type { State } from "./state.js"
 
 export function cleanInput(input: string): string[] {
   let res: string[] = []
