@@ -22,10 +22,9 @@ export async function startREPL(rl: State) {
     if (!clean) {
       repl.prompt();
 
-    } else if (clean[0] in getCommands()) {
-
+    } else if (clean[0] in rl.commands) {
       try{
-        await getCommands()[clean[0]].callback(rl);
+        await rl.commands[clean[0]].callback(rl);
         } catch (err: any) {
           throw new Error(err.message)
       }

@@ -1,5 +1,5 @@
-import type { CLICommand } from "./state.js";
-import type { State } from "./state.js";
+import type { CLICommand } from "./state";
+import type { State } from "./state";
 
 export async function commandMap(state: State) {
     try {
