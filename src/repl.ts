@@ -1,5 +1,5 @@
-import { getCommands } from "./commands.js";
-import type { State } from "./state.js"
+import { getCommands } from "./commands";
+import type { State } from "./state"
 
 export function cleanInput(input: string): string[] {
   let res: string[] = []

@@ -1,4 +1,3 @@
-import { getCommands } from "./commands.js";
 export function cleanInput(input) {
     let res = [];
     let phrase = input.trim();
@@ -9,16 +8,21 @@ export function cleanInput(input) {
     }
     return res;
 }
-export function startREPL(rl) {
+export async function startREPL(rl) {
     const repl = rl.interface;
     repl.prompt();
-    repl.on("line", (line) => {
+    repl.on("line", async (line) => {
         const clean = cleanInput(line);
         if (!clean) {
             repl.prompt();
         }
-        else if (clean[0] in getCommands()) {
-            getCommands()[clean[0]].callback(rl);
+        else if (clean[0] in rl.commands) {
+            try {
+                await rl.commands[clean[0]].callback(rl);
+            }
+            catch (err) {
+                throw new Error(err.message);
+            }
         }
         else {
             console.log("Unknown command");
